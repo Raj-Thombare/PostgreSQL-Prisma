@@ -7,6 +7,55 @@ interface UpdateParams {
     lastName: string
 }
 
+async function getTodosAndUserDetails(userId: number) {
+    const todos = await prisma.todo.findMany({
+        where: {
+            userId: userId,
+        },
+        select: {
+            title: true,
+            description: true,
+            done: true,
+            user: {
+                select: {
+                    email: true,
+                    firstName: true,
+                    lastName: true
+                }
+            }
+        }
+    });
+    console.log(todos);
+}
+
+getTodosAndUserDetails(1);
+getTodosAndUserDetails(2);
+
+async function getTodos(userId: number) {
+    const todos = await prisma.todo.findMany({
+        where: {
+            userId: userId,
+        },
+    });
+    console.log(todos);
+}
+
+// getTodos(1);
+
+async function createTodo(userId: number, title: string, description: string) {
+    const todo = await prisma.todo.create({
+        data: {
+            title,
+            description,
+            userId
+        },
+    });
+    console.log(todo);
+}
+
+// createTodo(1, "go to gym", "go to gym and do 10 pushups");
+// createTodo(2, "learn prisma", "learn prisma with ts");
+
 async function getUser(username: string) {
     const res = await prisma.user.findFirst({
         where: { email: username }
@@ -42,6 +91,6 @@ async function insertUser(username: string, password: string, firstName: string,
 //     firstName: "Raj",
 //     lastName: "Thombare"
 // })
-getUser("admin2");
+// getUser("admin2");
 
 
